@@ -28,13 +28,13 @@ class Geomagnetism {
 		c[0][0] = 0;
 		cd[0][0] = 0;
 
-		epoch = Double.parseDouble(WMM_COF[0].trim().split("[\\s]+")[0]);
+		epoch = Double.parseDouble(WMM_COF[0].trim().split("\\s+")[0]);
 
 		String[] tokens;
 
 		double gnm, hnm, dgnm, dhnm;
 		for (int i = 1, m, n; i < WMM_COF.length; i++) {
-			tokens = WMM_COF[i].trim().split("[\\s]+");
+			tokens = WMM_COF[i].trim().split("\\s+");
 			n = Integer.parseInt(tokens[0]);
 			m = Integer.parseInt(tokens[1]);
 			gnm = Double.parseDouble(tokens[2]);
