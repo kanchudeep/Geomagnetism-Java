@@ -1,3 +1,5 @@
+import java.util.Calendar;
+
 /*	License Statement from the NOAA
 * The WMM source code is in the public domain and not licensed or
 * under copyright. The information and software may be used freely
@@ -74,25 +76,44 @@ class Geomagnetism {
 		otime = oalt = olat = olon = -1000;
 	}
 
-	/** Initialise the instance and calculate for given location and time
+	/** Initialise the instance and calculate for given location and date
 	*	@param longitude	Longitude in decimal degrees
 	*	@param latitude		Latitude in decimal degrees
 	*	@param altitude		Altitude in metres
-	*	@param yearFraction	Date of the calculation in decimal years*/
-	Geomagnetism(double longitude, double latitude, double altitude, double yearFraction) {
+	*	@param calendar		Calendar for date of calculation*/
+	Geomagnetism(double longitude, double latitude, double altitude, Calendar calendar) {
 		this();
-		calculate(longitude, latitude, altitude, yearFraction);
+		calculate(longitude, latitude, altitude, calendar);
 	}
 
-	/** Calculate for given location and time
+	/** Initialise the instance and calculate for given location and date
+	*	@param longitude	Longitude in decimal degrees
+	*	@param latitude		Latitude in decimal degrees
+	*	@param altitude		Altitude in metres*/
+	Geomagnetism(double longitude, double latitude, double altitude) {
+		this();
+		calculate(longitude, latitude, altitude);
+	}
+
+	/** Initialise the instance and calculate for given location and date
+	*	@param longitude	Longitude in decimal degrees
+	*	@param latitude		Latitude in decimal degrees*/
+	Geomagnetism(double longitude, double latitude) {
+		this();
+		calculate(longitude, latitude);
+	}
+
+	/** Calculate for given location and date
 	*	@param longitude	Longitude in decimal degrees
 	*	@param latitude		Latitude in decimal degrees
 	*	@param altitude		Altitude in metres
-	*	@param yearFraction	Date of the calculation in decimal years*/
-	void calculate(double longitude, double latitude, double altitude, double yearFraction) {
+	*	@param calendar		Calendar for date of calculation*/
+	void calculate(double longitude, double latitude, double altitude, Calendar calendar) {
 		double rlon = Math.toRadians(longitude),
 				rlat = Math.toRadians(latitude),
 				altitudeKm = altitude / 1000,
+				yearFraction = calendar.get(Calendar.YEAR) + (double) calendar.get(Calendar.DAY_OF_YEAR)
+					/ calendar.getActualMaximum(Calendar.DAY_OF_YEAR),
 				dt = yearFraction - epoch,
 				srlon = Math.sin(rlon),
 				srlat = Math.sin(rlat),
@@ -206,8 +227,8 @@ class Geomagnetism {
 		bz = bt * sa - br * ca;
 
 		// Compute declination (dec), inclination (dip) and total intensity (ti)
-		bh = Math.sqrt((bx * bx)+(by * by));
-		intensity = Math.sqrt((bh * bh)+(bz * bz));
+		bh = Math.sqrt((bx * bx) + (by * by));
+		intensity = Math.sqrt((bh * bh) + (bz * bz));
 		//	Calculate the declination.
 		declination = Math.toDegrees(Math.atan2(by, bx));
 		inclination = Math.toDegrees(Math.atan2(bz, bh));
@@ -216,6 +237,21 @@ class Geomagnetism {
 		oalt = altitudeKm;
 		olat = latitude;
 		olon = longitude;
+	}
+
+	/** Calculate for given location and date
+	*	@param longitude	Longitude in decimal degrees
+	*	@param latitude		Latitude in decimal degrees
+	*	@param altitude		Altitude in metres*/
+	void calculate(double longitude, double latitude, double altitude) {
+		calculate(longitude, latitude, altitude, Calendar.getInstance());
+	}
+
+	/** Calculate for given location and date
+	*	@param longitude	Longitude in decimal degrees
+	*	@param latitude		Latitude in decimal degrees*/
+	void calculate(double longitude, double latitude) {
+		calculate(longitude, latitude, 0);
 	}
 
 	/** @return The declination in degrees*/
