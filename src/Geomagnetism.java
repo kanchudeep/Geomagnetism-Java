@@ -1,5 +1,3 @@
-import java.util.Calendar;
-
 /*	License Statement from the NOAA
 * The WMM source code is in the public domain and not licensed or
 * under copyright. The information and software may be used freely
@@ -8,6 +6,8 @@ import java.util.Calendar;
 * by U.S. government agencies must provide notice with such work(s)
 * identifying the U.S. Government material incorporated and stating
 * that such material is not subject to copyright protection.*/
+
+import java.util.Calendar;
 
 /** <p>Class to calculate magnetic declination, magnetic field strength,
 * inclination etc. for any point on the earth.</p>
