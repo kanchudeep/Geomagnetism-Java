@@ -128,8 +128,6 @@ class Geomagnetism {
 				b4 = b2 * b2,
 				c4 = a4 - b4;
 
-		System.out.printf("yearFraction: %f\n", yearFraction);
-
 		sp[1] = srlon;
 		cp[1] = crlon;
 
