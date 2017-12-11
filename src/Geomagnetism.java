@@ -76,7 +76,7 @@ class Geomagnetism {
 		otime = oalt = olat = olon = -1000;
 	}
 
-	/** Initialise the instance and calculate for given location and date
+	/** Initialise the instance and calculate for given location, altitude and date
 	*	@param longitude	Longitude in decimal degrees
 	*	@param latitude		Latitude in decimal degrees
 	*	@param altitude		Altitude in metres
@@ -86,7 +86,7 @@ class Geomagnetism {
 		calculate(longitude, latitude, altitude, calendar);
 	}
 
-	/** Initialise the instance and calculate for given location and date
+	/** Initialise the instance and calculate for given location, altitude and current date
 	*	@param longitude	Longitude in decimal degrees
 	*	@param latitude		Latitude in decimal degrees
 	*	@param altitude		Altitude in metres*/
@@ -95,7 +95,7 @@ class Geomagnetism {
 		calculate(longitude, latitude, altitude);
 	}
 
-	/** Initialise the instance and calculate for given location and date
+	/** Initialise the instance and calculate for given location, zero altitude and current date
 	*	@param longitude	Longitude in decimal degrees
 	*	@param latitude		Latitude in decimal degrees*/
 	Geomagnetism(double longitude, double latitude) {
@@ -103,7 +103,7 @@ class Geomagnetism {
 		calculate(longitude, latitude);
 	}
 
-	/** Calculate for given location and date
+	/** Calculate for given location, altitude and date
 	*	@param longitude	Longitude in decimal degrees
 	*	@param latitude		Latitude in decimal degrees
 	*	@param altitude		Altitude in metres
@@ -127,6 +127,8 @@ class Geomagnetism {
 				a4 = a2 * a2,
 				b4 = b2 * b2,
 				c4 = a4 - b4;
+
+		System.out.printf("yearFraction: %f\n", yearFraction);
 
 		sp[1] = srlon;
 		cp[1] = crlon;
@@ -239,7 +241,7 @@ class Geomagnetism {
 		olon = longitude;
 	}
 
-	/** Calculate for given location and date
+	/** Calculate for given location, altitude and current date
 	*	@param longitude	Longitude in decimal degrees
 	*	@param latitude		Latitude in decimal degrees
 	*	@param altitude		Altitude in metres*/
@@ -247,51 +249,52 @@ class Geomagnetism {
 		calculate(longitude, latitude, altitude, Calendar.getInstance());
 	}
 
-	/** Calculate for given location and date
+	/** Calculate for given location, zero altitude and current date
 	*	@param longitude	Longitude in decimal degrees
 	*	@param latitude		Latitude in decimal degrees*/
 	void calculate(double longitude, double latitude) {
 		calculate(longitude, latitude, 0);
 	}
 
-	/** @return The declination in degrees*/
+	/** @return Geomagnetic declination (degrees) [opposite of variation, positive Eastward/negative Westward]*/
 	double getDeclination() {
 		return declination;
 	}
 
-	/** @return The magnetic field intensity/strength in nano Tesla*/
+	/** @return Geomagnetic inclination/dip angle (degrees) [positive downward]*/
+	double getInclination() {
+		return inclination;
+	}
+
+	/** @return Geomagnetic field intensity/strength (nano Teslas)*/
 	double getIntensity() {
 		return intensity;
 	}
 
-	/** @return The horizontal magnetic field intensity/strength in nano Tesla*/
+	/** @return Geomagnetic horizontal field intensity/strength (nano Teslas)*/
 	double getHorizontalIntensity() {
 		return bh;
 	}
 
-	/** @return The vertical magnetic field intensity/strength in nano Tesla*/
+	/** @return Geomagnetic vertical field intensity/strength (nano Teslas) [positive downward]*/
 	double getVerticalIntensity() {
 		return bz;
 	}
 
-	/** @return The northerly component of the magnetic field strength in nano Tesla*/
+	/** @return Geomagnetic North South (northerly component) field intensity/strength (nano Tesla)*/
 	double getNorthIntensity() {
 		return bx;
 	}
 
-	/** @return The easterly component of the magnetic field strength in nano Tesla*/
+	/** @return Geomagnetic East West (easterly component) field intensity/strength (nano Teslas)*/
 	double getEastIntensity() {
 		return by;
 	}
 
-	/** @return The magnetic field dip angle, in degrees*/
-	double getDipAngle() {
-		return inclination;
-	}
-
 	/**	The input string array which contains each line of input for the wmm.cof input file.
 	*	The columns in this file are as follows:	n,	m,	gnm,	hnm,	dgnm,	dhnm*/
-	private final static String [] WMM_COF = {"    2015.0            WMM-2015        12/15/2014",
+	private final static String [] WMM_COF = {
+			"    2015.0            WMM-2015        12/15/2014",
 			"  1  0  -29438.5       0.0       10.7        0.0",
 			"  1  1   -1501.1    4796.2       17.9      -26.8",
 			"  2  0   -2445.3       0.0       -8.6        0.0",
@@ -383,57 +386,66 @@ class Geomagnetism {
 			" 12 11      -0.9      -0.2        0.0        0.0",
 			" 12 12       0.0       0.7        0.0        0.0",};
 
-	/** Mean radius of IAU-66 ellipsoid, in km.*/
+	/** Mean radius of IAU-66 ellipsoid, in km*/
 	private static final double IAU66_RADIUS = 6371.2;
 
-	/** Semi-major axis of WGS-84 ellipsoid, in km.*/
+	/** Semi-major axis of WGS-84 ellipsoid, in km*/
 	private static final double WGS84_A = 6378.137;
 
-	/** Semi-minor axis of WGS-84 ellipsoid, in km.*/
+	/** Semi-minor axis of WGS-84 ellipsoid, in km*/
 	private static final double WGS84_B = 6356.7523142;
 
-	/** The maximum number of degrees of the spherical harmonic model.*/
+	/** The maximum number of degrees of the spherical harmonic model*/
 	private static final int MAX_DEG = 12;
 
-	/** Geomagnetic declination in deg.
-	*	East is positive, West is negative.
-	*	(The negative of variation.)*/
+	/** Geomagnetic declination (decimal degrees) [opposite of variation, positive Eastward/negative Westward]*/
 	private double declination = 0;
 
-	/** Geomagnetic inclination in deg.
-	*	Down is positive, up is negative.*/
+	/** Geomagnetic inclination/dip angle (degrees) [positive downward]*/
 	private double inclination = 0;
 
-	/** Geomagnetic total intensity, in nano Teslas.*/
+	/** Geomagnetic field intensity/strength (nano Teslas)*/
 	private double intensity = 0;
 
-	/** The maximum order of spherical harmonic model.*/
+	/** Geomagnetic horizontal field intensity/strength (nano Teslas)*/
+	private double bh;
+
+	/** Geomagnetic vertical field intensity/strength (nano Teslas) [positive downward]*/
+	private double bz;
+
+	/** Geomagnetic North South (northerly component) field intensity/strength (nano Tesla)*/
+	private double bx;
+
+	/** Geomagnetic East West (easterly component) field intensity/strength (nano Teslas)*/
+	private double by;
+
+	/** The maximum order of spherical harmonic model*/
 	private int maxord;
 
-	/** The Gauss coefficients of main geomagnetic model (nt).*/
+	/** The Gauss coefficients of main geomagnetic model (nt)*/
 	private double c[][] = new double[13][13];
 
-	/** The Gauss coefficients of secular geomagnetic model (nt/yr).*/
+	/** The Gauss coefficients of secular geomagnetic model (nt/yr)*/
 	private double cd[][] = new double[13][13];
 
-	/** The time adjusted geomagnetic gauss coefficients (nt).*/
+	/** The time adjusted geomagnetic gauss coefficients (nt)*/
 	private double tc[][] = new double[13][13];
 
-	/** The theta derivative of p(n,m) (unnormalized).*/
+	/** The theta derivative of p(n,m) (unnormalized)*/
 	private double dp[][] = new double[13][13];
 
-	/** The Schmidt normalization factors.*/
+	/** The Schmidt normalization factors*/
 	private double snorm[] = new double[169];
 
-	/** The sine of (m*spherical coord. longitude).*/
+	/** The sine of (m*spherical coordinate longitude)*/
 	private double sp[] = new double[13];
 
-	/** The cosine of (m*spherical coord. longitude).*/
+	/** The cosine of (m*spherical coordinate longitude)*/
 	private double cp[] = new double[13];
 	private double fn[] = new double[13];
 	private double fm[] = new double[13];
 
-	/** The associated Legendre polynomials for m = 1 (unnormalized).*/
+	/** The associated Legendre polynomials for m = 1 (unnormalized)*/
 	private double pp[] = new double[13];
 
 	private double k[][] = new double[13][13];
@@ -441,17 +453,11 @@ class Geomagnetism {
 	/** The variables otime (old time), oalt (old altitude),
 	*	olat (old latitude), olon (old longitude), are used to
 	*	store the values used from the previous calculation to
-	*	save on calculation time if some inputs don't change.*/
+	*	save on calculation time if some inputs don't change*/
 	private double otime, oalt, olat, olon;
 
 	/** The date in years, for the start of the valid time of the fit coefficients*/
 	private double epoch;
-
-	/** bx is the north south field intensity
-	*	by is the east west field intensity
-	*	bz is the vertical field intensity positive downward
-	*	bh is the horizontal field intensity*/
-	private double bx, by, bz, bh;
 
 	private double r, d, ca, sa, ct, st;
 }
