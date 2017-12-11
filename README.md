@@ -3,7 +3,7 @@ Java class to calculate magnetic declination, magnetic field strength, inclinati
 
 ## Usage:
 ```java
-// Create instance
+// Create instance with only location and without altitude & date
 Geomagnetism gm = new Geomagnetism(123.45678, 76.54321);
 System.out.printf("Declination: %f\n", gm.getDeclination());
 
