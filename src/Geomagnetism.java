@@ -7,7 +7,7 @@
 * identifying the U.S. Government material incorporated and stating
 * that such material is not subject to copyright protection.*/
 
-import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /** <p>Class to calculate magnetic declination, magnetic field strength,
 * inclination etc. for any point on the earth.</p>
@@ -81,7 +81,7 @@ class Geomagnetism {
 	*	@param latitude		Latitude in decimal degrees
 	*	@param altitude		Altitude in metres (with respect to WGS-1984 ellipsoid)
 	*	@param calendar		Calendar for date of calculation*/
-	Geomagnetism(double longitude, double latitude, double altitude, Calendar calendar) {
+	Geomagnetism(double longitude, double latitude, double altitude, GregorianCalendar calendar) {
 		this();
 		calculate(longitude, latitude, altitude, calendar);
 	}
@@ -108,12 +108,12 @@ class Geomagnetism {
 	*	@param latitude		Latitude in decimal degrees
 	*	@param altitude		Altitude in metres (with respect to WGS-1984 ellipsoid)
 	*	@param calendar		Calendar for date of calculation*/
-	void calculate(double longitude, double latitude, double altitude, Calendar calendar) {
+	void calculate(double longitude, double latitude, double altitude, GregorianCalendar calendar) {
 		double rlon = Math.toRadians(longitude),
 				rlat = Math.toRadians(latitude),
 				altitudeKm = altitude / 1000,
-				yearFraction = calendar.get(Calendar.YEAR) + (double) calendar.get(Calendar.DAY_OF_YEAR)
-					/ calendar.getActualMaximum(Calendar.DAY_OF_YEAR),
+				yearFraction = calendar.get(GregorianCalendar.YEAR) + (double) calendar.get(GregorianCalendar.DAY_OF_YEAR)
+					/ calendar.getActualMaximum(GregorianCalendar.DAY_OF_YEAR),
 				dt = yearFraction - epoch,
 				srlon = Math.sin(rlon),
 				srlat = Math.sin(rlat),
@@ -244,7 +244,7 @@ class Geomagnetism {
 	*	@param latitude		Latitude in decimal degrees
 	*	@param altitude		Altitude in metres (with respect to WGS-1984 ellipsoid)*/
 	void calculate(double longitude, double latitude, double altitude) {
-		calculate(longitude, latitude, altitude, Calendar.getInstance());
+		calculate(longitude, latitude, altitude, new GregorianCalendar());
 	}
 
 	/** Calculate for given location, zero altitude and current date
