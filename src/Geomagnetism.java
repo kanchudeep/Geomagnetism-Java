@@ -111,7 +111,7 @@ class Geomagnetism {
 	void calculate(double longitude, double latitude, double altitude, GregorianCalendar calendar) {
 		double rlon = Math.toRadians(longitude),
 				rlat = Math.toRadians(latitude),
-				altitudeKm = altitude / 1000,
+				altitudeKm = Double.isNaN(altitude) ? 0 : altitude / 1000,
 				yearFraction = calendar.get(GregorianCalendar.YEAR) + (double) calendar.get(GregorianCalendar.DAY_OF_YEAR)
 					/ calendar.getActualMaximum(GregorianCalendar.DAY_OF_YEAR),
 				dt = yearFraction - epoch,
